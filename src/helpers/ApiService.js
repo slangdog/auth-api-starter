@@ -1,44 +1,35 @@
 import { AuthHeader } from './AuthHeader';
 import { ApiResponse } from './ApiResponse';
+import { AuthContext } from '../context/AuthContext';
 
 export const ApiService = {
   get, post, patch, del
 };
 
-function get(endpoint, context) {
+function apiCall(method, endpoint, context, body = {}, header = '') {
   const requestOptions = {
-    method: 'GET',
-    headers: AuthHeader(context.auth),
+    method: method,
+    headers: header == '' ? AuthHeader(context.auth) : AuthHeader(context.auth, header),
     dataType: 'json',
   };
+  if (method === 'POST' || method === 'PATCH') {
+    requestOptions.body = JSON.stringify(body);
+  }
   return fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, requestOptions).then((res) => ApiResponse(res, context));
+}
+
+function get(endpoint, context) {
+  return apiCall('GET', endpoint, context);
 }
 
 function post(endpoint, context, body) {
-  const requestOptions = {
-    method: 'POST',
-    headers: AuthHeader(context.auth),
-    dataType: 'json',
-    body: JSON.stringify(body)
-  };
-  return fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, requestOptions).then((res) => ApiResponse(res, context));
+  return apiCall('POST', endpoint, context, body)
 }
 
 function patch(endpoint, context, body) {
-  const requestOptions = {
-    method: 'PATCH',
-    headers: AuthHeader("application/merge-patch+json"),
-    dataType: 'json',
-    body: JSON.stringify(body)
-  };
-  return fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, requestOptions).then((res) => ApiResponse(res, context));
+  return apiCall('PATCH', endpoint, context, body, "application/merge-patch+json")
 }
 
 function del(endpoint, context) {
-  const requestOptions = {
-    method: 'DELETE',
-    headers: AuthHeader(context.auth),
-    dataType: 'json',
-  };
-  return fetch(`${process.env.REACT_APP_API_URL}${endpoint}`, requestOptions).then((res) => ApiResponse(res, context));
+  return apiCall('DELETE', endpoint, context);
 }

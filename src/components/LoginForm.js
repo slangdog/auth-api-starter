@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 const LoginForm = (props) => {
@@ -11,18 +11,17 @@ const LoginForm = (props) => {
     e.preventDefault();
     login(email, password)
       .then(
-        user => {
-          props.history.push('/home');
-        },
         error => {
           setError(error.message);
         }
       );
   }
 
-  if (auth.token) {
-    props.history.push('/home');
-  }
+  useEffect(() => {
+    if (auth.token) {
+      props.history.push('/home');
+    }
+  }, [auth, props]);
 
   return (
     <form onSubmit={ submitForm }>

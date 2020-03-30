@@ -29,7 +29,10 @@ const AuthContextProvider = (props) => {
         setAuth(response);
         localStorage.setItem('auth', JSON.stringify(response));
         return response;
-      });
+      })
+      .catch(err => {
+        return err;
+      })
   },
   
   logout = () => {

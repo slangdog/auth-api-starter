@@ -1,6 +1,5 @@
 import { AuthHeader } from './AuthHeader';
 import { ApiResponse } from './ApiResponse';
-import { AuthContext } from '../context/AuthContext';
 
 export const ApiService = {
   get, post, patch, del
@@ -9,7 +8,7 @@ export const ApiService = {
 function apiCall(method, endpoint, context, body = {}, header = '') {
   const requestOptions = {
     method: method,
-    headers: header == '' ? AuthHeader(context.auth) : AuthHeader(context.auth, header),
+    headers: header === '' ? AuthHeader(context.auth) : AuthHeader(context.auth, header),
     dataType: 'json',
   };
   if (method === 'POST' || method === 'PATCH') {

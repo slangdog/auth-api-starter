@@ -12,7 +12,7 @@ const Home = () => {
     <>
       <h1>We are home.</h1>
       { stores.length > 0 && stores.map(store => (
-        <p key={ store.uid }>{ store.title }</p>
+        <p key={ store.pid }>{ store.title }</p>
       ))}
       <button onClick={ logout }>Logout</button>
     </>
